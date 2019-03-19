@@ -19,7 +19,7 @@ namespace Geocaching
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<Peron> Artist { get; set; }
+        public DbSet<Person> Artist { get; set; }
         public DbSet<Geocache> Producer { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
@@ -29,12 +29,21 @@ namespace Geocaching
 
         protected override void OnModelCreating(ModelBuilder model)
         {
-            model.Entity<>().HasKey(ap => new { });
+           // model.Entity<>().HasKey(ap => new { });
         }
-        /// <summary>
-        /// Interaction logic for MainWindow.xaml
-        /// </summary>
-        public partial class MainWindow : Window
+    }
+    public class Person
+    {
+
+    }
+    public class Geocache
+    {
+
+    }
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
     {
         // Contains the ID string needed to use the Bing map.
         // Instructions here: https://docs.microsoft.com/en-us/bingmaps/getting-started/bing-maps-dev-center-help/getting-a-bing-maps-key
@@ -95,6 +104,7 @@ namespace Geocaching
 
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
+                    
                     OnMapLeftClick();
                 }
             };
