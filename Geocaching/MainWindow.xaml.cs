@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Maps.MapControl.WPF;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Windows;
@@ -24,47 +25,54 @@ namespace Geocaching
         protected override void OnModelCreating(ModelBuilder model)
         {
             model.Entity<FoundGeocache>().HasKey(fg => new { fg.PersonID, fg.GeocacheID });
+            model.Entity<Geocache>()
+                .HasOne(k => k.Person)
+                .WithMany(p => p.Geocaches);
         }
     }
     public class Person
     {
-        [Key]
+        //[Key]
         public int ID { get; set; }
 
-        [Column(TypeName= "nvarchar(50)")]
+        [Column(TypeName= "nvarchar(50)"), Required]
         public string FirstName { get; set; }
 
-        [Column(TypeName = "nvarchar(50)")]
+        [Column(TypeName = "nvarchar(50)"), Required]
         public string LastName { get; set; }
 
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
-        [Column(TypeName = "nvarchar(50)")]
+        [Column(TypeName = "nvarchar(50)"), Required]
         public string Country { get; set; }
 
-        [Column(TypeName = "nvarchar(50)")]
+        [Column(TypeName = "nvarchar(50)"), Required]
         public string City { get; set; }
 
-        [Column(TypeName = "nvarchar(50)")]
+        [Column(TypeName = "nvarchar(50)"), Required]
         public string StreetName { get; set; }
-        public Int16 StreetNumber { get; set; }
+        public byte StreetNumber { get; set; }
+
+        public List<Geocache> Geocaches { get; set; }
 
     }
     public class Geocache
     {
         public int ID { get; set; }
-        public int PersonID { get; set; }
 
-        public float Latitude { get; set; }
-        public float Longitude { get; set; }
+        public int? PersonID { get; set; }
+       
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
 
-        [Column(TypeName = "nvarchar(255)")]
+        [Column(TypeName = "nvarchar(255)"), Required]
         public string Contents { get; set; }
 
-        [Column(TypeName = "nvarchar(255)")]
+        [Column(TypeName = "nvarchar(255)"), Required]
         public string Message { get; set; }
 
+        public Person Person { get; set; }
     }
     public class FoundGeocache
     {

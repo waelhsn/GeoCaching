@@ -166,13 +166,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\20190319112101_First.cs" />
-    <Compile Include="Migrations\20190319112101_First.designer.cs">
-      <DependentUpon>20190319112101_First.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20190319120133_Scond.cs" />
-    <Compile Include="Migrations\20190319120133_Scond.designer.cs">
-      <DependentUpon>20190319120133_Scond.cs</DependentUpon>
+    <Compile Include="Migrations\20190319132104_First.cs" />
+    <Compile Include="Migrations\20190319132104_First.designer.cs">
+      <DependentUpon>20190319132104_First.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="PersonDialog.xaml.cs">
@@ -207,6 +203,7 @@
   <ItemGroup>
     <Resource Include="Geocaches.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
