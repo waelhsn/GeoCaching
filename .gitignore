@@ -191,3 +191,4 @@ StyleCop.Cache
 bin
 obj
 *.lock
+.vs/Geocaching/v15/Server/sqlite3/*

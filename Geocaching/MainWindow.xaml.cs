@@ -74,6 +74,17 @@ namespace Geocaching
         public string Message { get; set; }
 
     }
+    public class FoundGeocache
+    {
+        [ForeignKey("PersonID")]
+        public int PersonID { get; set; }
+        public Person Person { get; set; }
+
+
+        [ForeignKey("GeocacheID")]
+        public int GeocacheID { get; set; }
+        public Geocache Geocache { get; set; }
+    }
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
