@@ -1,28 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Maps.MapControl.WPF;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Geocaching
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<Person> Artist { get; set; }
-        public DbSet<Geocache> Producer { get; set; }
+        public DbSet<Person> Person { get; set; }
+        public DbSet<Geocache> Geochache { get; set; }
+        public DbSet<FoundGeocache> FoundGeocache { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
@@ -31,7 +23,7 @@ namespace Geocaching
 
         protected override void OnModelCreating(ModelBuilder model)
         {
-           // model.Entity<>().HasKey(ap => new { });
+            model.Entity<FoundGeocache>().HasKey(fg => new { fg.PersonID, fg.GeocacheID });
         }
     }
     public class Person
@@ -45,8 +37,8 @@ namespace Geocaching
         [Column(TypeName = "nvarchar(50)")]
         public string LastName { get; set; }
 
-        public float Latitude { get; set; }
-        public float Longitude { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]
         public string Country { get; set; }
@@ -102,13 +94,7 @@ namespace Geocaching
 
         private Location gothenburg = new Location(57.719021, 11.991202);
 
-        class AppDbContext : DbContext
-        {
-            protected override void OnConfiguring(DbContextOptionsBuilder options)
-            {
-                options.UseSqlServer(@"Data Source=(local)\SQLEXPRESS;Initial Catalog=Geocaching;Integrated Security=True");
-            }
-        }
+        
 
         public MainWindow()
         {
