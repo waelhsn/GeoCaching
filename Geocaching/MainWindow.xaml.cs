@@ -102,10 +102,13 @@ namespace Geocaching
 
         private Location gothenburg = new Location(57.719021, 11.991202);
 
-        
+        static AppDbContext database;
+
 
         public MainWindow()
         {
+            // Load data from database and populate map here.
+
             InitializeComponent();
             Start();
         }
@@ -121,11 +124,6 @@ namespace Geocaching
             }
 
             CreateMap();
-
-            using (var db = new AppDbContext())
-            {
-                // Load data from database and populate map here.
-            }
         }
 
         private void CreateMap()
@@ -205,13 +203,27 @@ namespace Geocaching
             if (dialog.DialogResult == false)
             {
                 return;
+            };
+
+            using (database = new AppDbContext())
+            {
+                Person p = new Person
+                {
+                    FirstName = dialog.PersonFirstName,
+                    LastName = dialog.PersonLastName,
+                    Latitude = latestClickLocation.Latitude,
+                    Longitude = latestClickLocation.Longitude,
+                    City = dialog.AddressCity,
+                    Country = dialog.AddressCountry,
+                    StreetName = dialog.AddressStreetName,
+                    StreetNumber = dialog.AddressStreetNumber,
+                };
+
+                // Add person to map and database here.
+                database.Add(p);
+                database.SaveChanges();
             }
 
-            string city = dialog.AddressCity;
-            string country = dialog.AddressCountry;
-            string streetName = dialog.AddressStreetName;
-            int streetNumber = dialog.AddressStreetNumber;
-            // Add person to map and database here.
             var pin = AddPin(latestClickLocation, "Person", Colors.Blue);
 
             pin.MouseDown += (s, a) =>
