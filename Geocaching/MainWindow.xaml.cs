@@ -35,7 +35,7 @@ namespace Geocaching
         //[Key]
         public int ID { get; set; }
 
-        [Column(TypeName= "nvarchar(50)"), Required]
+        [Column(TypeName = "nvarchar(50)"), Required]
         public string FirstName { get; set; }
 
         [Column(TypeName = "nvarchar(50)"), Required]
