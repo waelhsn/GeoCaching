@@ -167,6 +167,7 @@ namespace Geocaching
                 Location personLocation = new Location(item.Latitude, item.Longitude);
 
                 var pin = AddPin(personLocation, item.FirstName, Colors.Blue);
+
                 pin.MouseDown += (s, a) =>
                 {
                     // Handle click on geocache pin here.
@@ -176,10 +177,41 @@ namespace Geocaching
 
                     MessageBox.Show("You have selected: " + item.FirstName + " " + item.LastName + "\n" );
                     UpdateMap();
-
+                    //if (selectedPerson != item.ID)
+                    //{
+                    //    pin.Background = new SolidColorBrush(Colors.Blue);
+                    //}
                     // Prevent click from being triggered on map.
                     a.Handled = true;
+
+                    //AddPin(personLocation, item.FirstName,Colors.Blue);
+                    
                 };
+                //while (!done == true)
+                //foreach (var personPin in database.Person)
+                //{
+
+                map.MouseDown += (s, a) =>
+                {
+                    // Handle click on geocache pin here.
+                    foreach (var pins in database.Person)
+                    {
+                    pin.Background = new SolidColorBrush(Colors.Blue);
+
+                    }
+
+                    selectedPerson = item.ID;
+
+                    UpdateMap();
+
+                    a.Handled = true;
+
+                };
+
+                //}
+
+
+
             }
             foreach (var item in database.Geochache)
             {
