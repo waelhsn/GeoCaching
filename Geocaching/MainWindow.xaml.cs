@@ -191,22 +191,22 @@ namespace Geocaching
                 //foreach (var personPin in database.Person)
                 //{
 
-                map.MouseDown += (s, a) =>
-                {
-                    // Handle click on geocache pin here.
-                    foreach (var pins in database.Person)
-                    {
-                    pin.Background = new SolidColorBrush(Colors.Blue);
+                //map.MouseDown += (s, a) =>
+                //{
+                //    Handle click on geocache pin here.
+                //    foreach (var pins in database.Person)
+                //    {
+                //        pin.Background = new SolidColorBrush(Colors.Blue);
 
-                    }
+                //    }
 
-                    selectedPerson = item.ID;
+                //    selectedPerson = item.ID;
 
-                    UpdateMap();
+                //    UpdateMap();
 
-                    a.Handled = true;
+                //    a.Handled = true;
 
-                };
+                //};
 
                 //}
 
@@ -274,6 +274,7 @@ namespace Geocaching
             {
                 return;
             }
+            try{
 
             // Add geocache to map and database here.
             Geocache g = new Geocache
@@ -284,9 +285,14 @@ namespace Geocaching
                 Latitude = latestClickLocation.Latitude,
                 Longitude = latestClickLocation.Longitude,
             };
-
             database.Add(g);
             database.SaveChanges();
+            }
+            catch
+            {
+                MessageBox.Show("Please Select a person from the map, and then add a new GeoCache to that person you have selected.");
+            }
+
 
             var pin = AddPin(latestClickLocation, "Person", Colors.Gray);
 
