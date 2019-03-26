@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -106,8 +107,10 @@ namespace Geocaching
 
         static AppDbContext database;
 
-        public int selectedPerson;
-        public int selectedGeo;
+        public int selectedPerson { get; set; }
+        public int selectedGeo { get; set; }
+    public bool IsSelected { get; set;
+  }
 
         public MainWindow()
         {
@@ -166,52 +169,19 @@ namespace Geocaching
             {
                 Location personLocation = new Location(item.Latitude, item.Longitude);
 
-                var pin = AddPin(personLocation, item.FirstName, Colors.Blue);
+                var pin = AddPin(personLocation, item.FirstName+ " " +item.LastName + "\n"+ item.StreetName+" "+ item.StreetNumber + "\n" + item.City ,  Colors.Blue);
 
                 pin.MouseDown += (s, a) =>
-                {
+                {   
                     // Handle click on geocache pin here.
                     pin.Background = new SolidColorBrush(Colors.Green);
-                    
                     selectedPerson = item.ID;
-
-                    MessageBox.Show("You have selected: " + item.FirstName + " " + item.LastName + "\n" );
+                    MessageBox.Show("You have selected:" + "\n" + item.FirstName + " "+ item.LastName + "\n" + item.StreetName +" "+item.StreetNumber);
                     UpdateMap();
-                    //if (selectedPerson != item.ID)
-                    //{
-                    //    pin.Background = new SolidColorBrush(Colors.Blue);
-                    //}
-                    // Prevent click from being triggered on map.
                     a.Handled = true;
-
                     //AddPin(personLocation, item.FirstName,Colors.Blue);
-                    
                 };
-                //while (!done == true)
-                //foreach (var personPin in database.Person)
-                //{
-
-                //map.MouseDown += (s, a) =>
-                //{
-                //    Handle click on geocache pin here.
-                //    foreach (var pins in database.Person)
-                //    {
-                //        pin.Background = new SolidColorBrush(Colors.Blue);
-
-                //    }
-
-                //    selectedPerson = item.ID;
-
-                //    UpdateMap();
-
-                //    a.Handled = true;
-
-                //};
-
-                //}
-
-
-
+               
             }
             foreach (var item in database.Geochache)
             {
@@ -290,22 +260,34 @@ namespace Geocaching
             }
             catch
             {
-                MessageBox.Show("Please Select a person from the map, and then add a new GeoCache to that person you have selected.");
+                  MessageBox.Show("Please Select a person from the map, and then add a new GeoCache to that person you have selected.");
             }
 
-
+            foreach (var item in database.Geochache)
+            {
             var pin = AddPin(latestClickLocation, "Person", Colors.Gray);
+
 
             pin.MouseDown += (s, a) =>
             {
                 // Handle click on geocache pin here.
-                MessageBox.Show("You clicked a geocache");
+                MessageBox.Show(item.Person.FirstName);
                 UpdateMap();
 
                 // Prevent click from being triggered on map.
                 a.Handled = true;
             };
+            }
+            
         }
+        //private void SaveAllPersons()
+        //{
+        //    const string persons = "Geochaches.text";
+        //    StreamWriter SavePersons = new StreamWriter(persons);
+        //    SavePersons.Write()
+            
+        //}
+
 
         private void OnAddPersonClick(object sender, RoutedEventArgs args)
         {
