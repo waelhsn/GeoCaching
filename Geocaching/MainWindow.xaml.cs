@@ -174,7 +174,7 @@ namespace Geocaching
 
                 pin.MouseDown += (s, a) =>
                 {   
-                perosnsList.Add(item);
+                  //  perosnsList.Add(item);
                     // Handle click on geocache pin here.
                     pin.Background = new SolidColorBrush(Colors.Green);
                     selectedPerson = item.ID;
