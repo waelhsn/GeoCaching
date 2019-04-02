@@ -109,8 +109,9 @@ namespace Geocaching
 
         public int selectedPerson { get; set; }
         public int selectedGeo { get; set; }
-    public bool IsSelected { get; set;
-  }
+        public bool IsSelected { get; set;}
+        public List<Person> perosnsList { get; set; }
+
 
         public MainWindow()
         {
