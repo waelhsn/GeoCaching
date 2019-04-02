@@ -110,7 +110,7 @@ namespace Geocaching
         public int selectedPerson { get; set; }
         public int selectedGeo { get; set; }
         public bool IsSelected { get; set;}
-        public List<Person> perosnsList { get; set; }
+        public List<Person> personList { get; set; }
 
 
         public MainWindow()
@@ -181,6 +181,7 @@ namespace Geocaching
                     MessageBox.Show("You have selected:" + "\n" + item.FirstName + " "+ item.LastName + "\n" + item.StreetName +" "+item.StreetNumber);
                     UpdateMap();
                     a.Handled = true;
+                    //SaveAllPersons();
                     //AddPin(personLocation, item.FirstName,Colors.Blue);
                 };
                
@@ -246,7 +247,10 @@ namespace Geocaching
             {
                 return;
             }
-            try{
+
+            try
+
+            {
 
             // Add geocache to map and database here.
             Geocache g = new Geocache
@@ -282,13 +286,47 @@ namespace Geocaching
             }
             
         }
-        //private void SaveAllPersons()
-        //{
-        //    const string persons = "Geochaches.text";
-        //    StreamWriter SavePersons = new StreamWriter(persons);
-        //    SavePersons.Write()
+        private void SaveAllPersons()
+        {
+
+            StreamWriter SavePersons = new StreamWriter("Geocaches.txt");
+
+            foreach (var item in database.FoundGeocache)
+            {
+                //const string persons = "Geocaches.txt";
+                string combinedString = item.Person.FirstName +
+                    " | " + item.Person.LastName +
+                    " | " + item.Person.Country +
+                    " | " + item.Person.City +
+                    " | " + item.Person.StreetName +
+                    " "   + item.Person.StreetNumber +
+                    " | " + item.Person.Latitude +
+                    " | " + item.Person.Longitude +
+
+                    "\n" + item.Geocache.PersonID +
+                    " | " + item.Geocache.Latitude +
+                    " | " + item.Geocache.Longitude +
+                    " | " + item.Geocache.Contents+
+                    " | " + item.Geocache.Message+
+                    "\n"+ "Found: " + item.PersonID +
+                    ", " + item.GeocacheID+ "\n";
+                    
+                SavePersons.WriteLine(combinedString);
+
+            }
+            //foreach (var item2 in database.Geochache)
+            //{
+            //    string combindString = item2.ID + "|" + item2.Latitude + "|" + item2.Longitude + "|" + item2.Contents + "|" + item2.Message;
+            //    SavePersons.WriteLine(combindString);
+            //}
+            //foreach (var item3 in database.FoundGeocache)
+            //{
+            //    string combindString = "Found: " + item3.PersonID + "," + item3.GeocacheID;
+            //    SavePersons.WriteLine(combindString);
+            //}
+            SavePersons.Close();
             
-        //}
+        }
 
 
         private void OnAddPersonClick(object sender, RoutedEventArgs args)
@@ -363,17 +401,17 @@ namespace Geocaching
 
         private void OnSaveToFileClick(object sender, RoutedEventArgs args)
         {
-            var dialog = new Microsoft.Win32.SaveFileDialog();
-            dialog.DefaultExt = ".txt";
-            dialog.Filter = "Text documents (.txt)|*.txt";
-            dialog.FileName = "Geocaches";
-            bool? result = dialog.ShowDialog();
-            if (result != true)
-            {
-                return;
-            }
-
-            string path = dialog.FileName;
+            SaveAllPersons();
+            //var dialog = new Microsoft.Win32.SaveFileDialog();
+            //dialog.DefaultExt = ".txt";
+            //dialog.Filter = "Text documents (.txt)|*.txt";
+            //dialog.FileName = "Geocaches";
+            //bool? result = dialog.ShowDialog();
+            //if (result != true)
+            //{
+            //    return;
+            //}
+            //string path = dialog.FileName;
             // Write to the selected file here.
         }
     }
