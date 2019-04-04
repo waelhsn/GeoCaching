@@ -302,7 +302,6 @@ namespace Geocaching
                     " "   + item.Person.StreetNumber +
                     " | " + item.Person.Latitude +
                     " | " + item.Person.Longitude +
-
                     "\n" + item.Geocache.PersonID +
                     " | " + item.Geocache.Latitude +
                     " | " + item.Geocache.Longitude +
@@ -310,10 +309,10 @@ namespace Geocaching
                     " | " + item.Geocache.Message+
                     "\n"+ "Found: " + item.PersonID +
                     ", " + item.GeocacheID+ "\n";
-                    
                 SavePersons.WriteLine(combinedString);
 
             }
+            SavePersons.Close();
             //foreach (var item2 in database.Geochache)
             //{
             //    string combindString = item2.ID + "|" + item2.Latitude + "|" + item2.Longitude + "|" + item2.Contents + "|" + item2.Message;
@@ -324,7 +323,6 @@ namespace Geocaching
             //    string combindString = "Found: " + item3.PersonID + "," + item3.GeocacheID;
             //    SavePersons.WriteLine(combindString);
             //}
-            SavePersons.Close();
             
         }
 
