@@ -21,13 +21,19 @@ namespace Geocaching.Migrations
 
             modelBuilder.Entity("Geocaching.FoundGeocache", b =>
                 {
-                    b.Property<int>("PersonID");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("GeocacheID");
+                    b.Property<int>("GeocacheId");
 
-                    b.HasKey("PersonID", "GeocacheID");
+                    b.Property<int>("PersonId");
 
-                    b.HasIndex("GeocacheID");
+                    b.HasKey("ID");
+
+                    b.HasIndex("GeocacheId");
+
+                    b.HasIndex("PersonId");
 
                     b.ToTable("FoundGeocache");
                 });
@@ -38,8 +44,7 @@ namespace Geocaching.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Contents")
-                        .IsRequired()
+                    b.Property<string>("Content")
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<double>("Latitude");
@@ -47,14 +52,13 @@ namespace Geocaching.Migrations
                     b.Property<double>("Longitude");
 
                     b.Property<string>("Message")
-                        .IsRequired()
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int?>("PersonID");
+                    b.Property<int?>("PersonId");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("PersonID");
+                    b.HasIndex("PersonId");
 
                     b.ToTable("Geocache");
                 });
@@ -66,19 +70,15 @@ namespace Geocaching.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<double>("Latitude");
@@ -86,7 +86,6 @@ namespace Geocaching.Migrations
                     b.Property<double>("Longitude");
 
                     b.Property<string>("StreetName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<byte>("StreetNumber");
@@ -99,21 +98,21 @@ namespace Geocaching.Migrations
             modelBuilder.Entity("Geocaching.FoundGeocache", b =>
                 {
                     b.HasOne("Geocaching.Geocache", "Geocache")
-                        .WithMany()
-                        .HasForeignKey("GeocacheID")
+                        .WithMany("FoundGeocaches")
+                        .HasForeignKey("GeocacheId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Geocaching.Person", "Person")
-                        .WithMany()
-                        .HasForeignKey("PersonID")
+                        .WithMany("FoundGeocaches")
+                        .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Geocaching.Geocache", b =>
                 {
                     b.HasOne("Geocaching.Person", "Person")
-                        .WithMany("Geocaches")
-                        .HasForeignKey("PersonID");
+                        .WithMany()
+                        .HasForeignKey("PersonId");
                 });
 #pragma warning restore 612, 618
         }
