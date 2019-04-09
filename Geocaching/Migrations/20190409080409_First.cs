@@ -28,7 +28,7 @@ namespace Geocaching.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Geochache",
+                name: "Geocache",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -41,9 +41,9 @@ namespace Geocaching.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Geochache", x => x.ID);
+                    table.PrimaryKey("PK_Geocache", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Geochache_Person_PersonID",
+                        name: "FK_Geocache_Person_PersonID",
                         column: x => x.PersonID,
                         principalTable: "Person",
                         principalColumn: "ID",
@@ -61,9 +61,9 @@ namespace Geocaching.Migrations
                 {
                     table.PrimaryKey("PK_FoundGeocache", x => new { x.PersonID, x.GeocacheID });
                     table.ForeignKey(
-                        name: "FK_FoundGeocache_Geochache_GeocacheID",
+                        name: "FK_FoundGeocache_Geocache_GeocacheID",
                         column: x => x.GeocacheID,
-                        principalTable: "Geochache",
+                        principalTable: "Geocache",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -80,8 +80,8 @@ namespace Geocaching.Migrations
                 column: "GeocacheID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Geochache_PersonID",
-                table: "Geochache",
+                name: "IX_Geocache_PersonID",
+                table: "Geocache",
                 column: "PersonID");
         }
 
@@ -91,7 +91,7 @@ namespace Geocaching.Migrations
                 name: "FoundGeocache");
 
             migrationBuilder.DropTable(
-                name: "Geochache");
+                name: "Geocache");
 
             migrationBuilder.DropTable(
                 name: "Person");

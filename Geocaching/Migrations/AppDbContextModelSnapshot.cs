@@ -56,7 +56,7 @@ namespace Geocaching.Migrations
 
                     b.HasIndex("PersonID");
 
-                    b.ToTable("Geochache");
+                    b.ToTable("Geocache");
                 });
 
             modelBuilder.Entity("Geocaching.Person", b =>
