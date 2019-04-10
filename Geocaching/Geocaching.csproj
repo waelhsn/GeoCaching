@@ -166,9 +166,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\20190409151720_First.cs" />
-    <Compile Include="Migrations\20190409151720_First.designer.cs">
-      <DependentUpon>20190409151720_First.cs</DependentUpon>
+    <Compile Include="Migrations\20190410094606_First.cs" />
+    <Compile Include="Migrations\20190410094606_First.designer.cs">
+      <DependentUpon>20190410094606_First.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="PersonDialog.xaml.cs">

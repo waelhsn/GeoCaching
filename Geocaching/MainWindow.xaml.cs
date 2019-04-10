@@ -22,7 +22,7 @@ namespace Geocaching
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlServer(@"Data Source=(local)\SQLEXPRESS;Initial Catalog=Geocaching;Integrated Security=True");
+            options.UseSqlServer(@"Data Source=(local)\SQLEXPRESS;Initial Catalog=GeoNeo;Integrated Security=True");
         }
 
         protected override void OnModelCreating(ModelBuilder model)
@@ -423,13 +423,17 @@ namespace Geocaching
                 {
                     foreach (Person p in ppl)
                     {
-                        list.Add(p.ID + " | " + p.FirstName + " | " + p.LastName + " | " + p.Country); //FORTSÄTT HÄR WAEL, City, Lang Long osv.
+                        list.Add( p.FirstName + " | " + p.LastName + 
+                            " | " + p.Country + " | " + p.City +
+                            " | " + p.StreetName + " | " +
+                            p.StreetNumber + " | " +p.Latitude +
+                            " | "+p.Longitude); //FORTSÄTT HÄR WAEL, City, Lang Long osv.
 
                         Geocache[] geo = database.Geocache
                             .Where(g => g.PersonId == p.ID)
                             .OrderByDescending(o => o).ToArray();
 
-                        geo.ToList().ForEach(g => list.Add(g.Content + " | " + g.Message));
+                        geo.ToList().ForEach(g => list.Add(g.ID +" | "+g.Latitude+ " | " +g.Longitude+ " | " +g.Content + " | " + g.Message));
 
                         FoundGeocache[] founds = database.FoundGeocache
                             .Where(f => f.PersonId == p.ID)
