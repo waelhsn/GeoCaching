@@ -435,7 +435,7 @@ namespace Geocaching
                             " | " + p.Country + " | " + p.City +
                             " | " + p.StreetName + " | " +
                             p.StreetNumber + " | " +p.Latitude +
-                            " | "+p.Longitude); //FORTSÄTT HÄR WAEL, City, Lang Long osv.
+                            " | "+p.Longitude); 
 
                         Geocache[] geo = database.Geocache
                             .Where(g => g.PersonId == p.ID)
