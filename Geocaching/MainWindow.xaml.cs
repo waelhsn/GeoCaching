@@ -270,13 +270,19 @@ namespace Geocaching
 
         private void GreenPin(object sender, MouseButtonEventArgs e)
         {
+            
             Pushpin pin = (Pushpin)sender;
             Geocache geocache = (Geocache)pin.Tag;
-            FoundGeocache foundGeocache = database.FoundGeocache
-                .FirstOrDefault(fg => fg.PersonId == selectedPerson.ID && fg.GeocacheId == geocache.ID);
-
+            try
+            {
+                FoundGeocache foundGeocache = database.FoundGeocache
+               .FirstOrDefault(fg => fg.PersonId == selectedPerson.ID && fg.GeocacheId == geocache.ID);
             database.Remove(foundGeocache);
-            database.SaveChanges();
+            }
+            catch { }
+
+            try { database.SaveChanges(); }
+            catch { }
             UpdatePin(pin, Colors.Red, 1);
             pin.MouseDown -= GreenPin;
             pin.MouseDown += RedPin;
@@ -293,7 +299,8 @@ namespace Geocaching
                 Geocache = geocache
             };
             database.Add(foundGeocache);
-            database.SaveChanges();
+            try { database.SaveChanges(); }
+            catch { }
             UpdatePin(pin, Colors.Green, 1);
             pin.MouseDown -= RedPin;
             pin.MouseDown += GreenPin;
