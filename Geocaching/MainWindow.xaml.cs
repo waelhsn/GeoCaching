@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace Geocaching
 {
@@ -43,22 +44,22 @@ namespace Geocaching
     {
         public int ID { get; set; }
 
-        [Column(TypeName = "nvarchar(50)")]
+        [Column(TypeName = "nvarchar(50)"), Required]
         public string FirstName { get; set; }
 
-        [Column(TypeName = "nvarchar(50)")]
+        [Column(TypeName = "nvarchar(50)"), Required]
         public string LastName { get; set; }
 
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
-        [Column(TypeName = "nvarchar(50)")]
+        [Column(TypeName = "nvarchar(50)"),Required]
         public string Country { get; set; }
 
-        [Column(TypeName = "nvarchar(50)")]
+        [Column(TypeName = "nvarchar(50)"),Required]
         public string City { get; set; }
 
-        [Column(TypeName = "nvarchar(50)")]
+        [Column(TypeName = "nvarchar(50)"),Required]
         public string StreetName { get; set; }
         public byte StreetNumber { get; set; }
 
@@ -72,10 +73,10 @@ namespace Geocaching
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
-        [Column(TypeName = "nvarchar(255)")]
-        public string Content { get; set; }
+        [Column(TypeName = "nvarchar(255)"),Required]
+        public string Contents { get; set; }
 
-        [Column(TypeName = "nvarchar(255)")]
+        [Column(TypeName = "nvarchar(255)"),Required]
         public string Message { get; set; }
 
         public int? PersonId { get; set; }
@@ -326,7 +327,7 @@ namespace Geocaching
                 Geocache g = new Geocache
                 {
                     PersonId = selectedPerson.ID,
-                    Content = dialog.GeocacheContents,
+                    Contents = dialog.GeocacheContents,
                     Message = dialog.GeocacheMessage,
                     Latitude = latestClickLocation.Latitude,
                     Longitude = latestClickLocation.Longitude,
@@ -433,7 +434,7 @@ namespace Geocaching
                             .Where(g => g.PersonId == p.ID)
                             .OrderByDescending(o => o).ToArray();
 
-                        geo.ToList().ForEach(g => list.Add(g.ID +" | "+g.Latitude+ " | " +g.Longitude+ " | " +g.Content + " | " + g.Message));
+                        geo.ToList().ForEach(g => list.Add(g.ID +" | "+g.Latitude+ " | " +g.Longitude+ " | " +g.Contents + " | " + g.Message));
 
                         FoundGeocache[] founds = database.FoundGeocache
                             .Where(f => f.PersonId == p.ID)
