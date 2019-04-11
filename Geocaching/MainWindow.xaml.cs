@@ -469,6 +469,8 @@ namespace Geocaching
 
         private void OnLoadFromFileClick(object sender, RoutedEventArgs args)
         {
+            Person userPerson = new Person();
+
             var dialog = new Microsoft.Win32.OpenFileDialog();
             dialog.DefaultExt = ".txt";
             dialog.Filter = "Text documents (.txt)|*.txt";
@@ -481,106 +483,124 @@ namespace Geocaching
             string path = dialog.FileName;
 
             // Read the selected file here.
-            Dictionary<Person, List<int>> personFoundGeocaches = new Dictionary<Person, List<int>>();
-            Dictionary<int, Geocache> specificGeocache = new Dictionary<int, Geocache>();
 
-            string[] lines = File.ReadAllLines(path, Encoding.GetEncoding("ISO-8859-1")).ToArray();
-            int counterPersonObject = 0;
-            int emptyLineCounter = 0;
+            List<List<String>> collection = new List<List<string>>();
+            List<string> linesWithObjects = new List<string>();
 
-            Person person = new Person();
-            Geocache geocache = new Geocache();
+            //alternative testing
+            List<Person> peopleList = new List<Person>();
+            List<string> foundValues = new List<string>();
 
             database.Person.RemoveRange(database.Person);
             database.Geocache.RemoveRange(database.Geocache);
-            database.SaveChanges();
+            database.FoundGeocache.RemoveRange(database.FoundGeocache);
 
-            foreach (string line in lines)
+            string[] lines = File.ReadAllLines(path).ToArray();
+
+            foreach (var line in lines)
             {
-                if (!line.Contains("Found"))
+                if (line != "")
                 {
-                    string[] values = line.Split('|').Select(v => v.Trim()).ToArray();
-
-                    if (values[0] != "" && counterPersonObject == 0)
-                    {
-                        person = new Person();
-                        person.FirstName = values[0];
-                        person.LastName = values[1];
-                        person.Country = values[2];
-                        person.City = values[3];
-                        person.StreetName = values[4];
-                        person.StreetNumber = byte.Parse(values[5]);
-                        person.Latitude = Convert.ToInt32( values[6]);
-                        person.Longitude = Convert.ToInt32(values[7]);
-                       
-                        emptyLineCounter = 0;
-                        counterPersonObject++;
-                        
-                    }
-
-                    else if (values[0] == "")
-                    {
-                        counterPersonObject = 0;
-                        emptyLineCounter++;
-
-                        if (emptyLineCounter == 2)
-                        {
-                            return;
-                        }
-                    }
-
-                    else
-                    {
-                        //geocache = new Geocache();
-
-                        //int geocacheNumber = int.Parse(values[0]);
-                        //geocache.Latitude = new Geocache
-                        //{
-                        //    Latitude = double.Parse(values[1]),
-                        //    Longitude = double.Parse(values[2])
-                        //};
-                        //geocache.Contents = values[3];
-                        //geocache.Message = values[4];
-                        //geocache.Person = person;
-
-                        //database.Geocache.Add(geocache);
-                        //database.SaveChanges();
-
-                        //specificGeocache.Add(geocacheNumber, geocache);
-                    }
+                    linesWithObjects.Add(line);
+                    continue;
                 }
-
                 else
                 {
-                    string[] geocachesFound = line.Split(':', ',').Skip(1).Select(v => v.Trim()).ToArray();
-                    List<int> geocachesId = new List<int>();
-                    foreach (var item in geocachesFound)
-                    {
-                        int geocacheId = int.Parse(item);
-                        geocachesId.Add(geocacheId);
-                    }
-                    personFoundGeocaches.Add(person, geocachesId);
+                    collection.Add(linesWithObjects);
+                    linesWithObjects = new List<string>();
                 }
             }
+            collection.Add(linesWithObjects);
 
-            //foreach (var personObject in personFoundGeocaches.Keys)
-            //{
-            //    foreach (int geocacheId in personFoundGeocaches[personObject])
-            //    {
-            //        var geocacheObject = specificGeocache[geocacheId];
-            //        FoundGeocache foundGeocache = new FoundGeocache
-            //        {
-            //            PersonID = personObject.ID,
-            //            GeocacheID = geocacheObject.ID
-            //        };
-            //        db.Add(foundGeocache);
-            //        db.SaveChanges();
-            //    };
-            //}
-            //pushpins.Clear();
-            //layer.Children.Clear();
-            //activePerson = null;
-            //ReadPersonAndGeocacheFromDatabase();
+
+            foreach (List<string> personLines in collection)
+            {
+                for (int i = 0; i < personLines.Count; i++)
+                {
+                    string[] values = personLines[i].Split('|').Select(v => v.Trim()).ToArray();
+
+                    if (personLines[i].StartsWith("Found:"))
+                    {
+                        foundValues.Add(personLines[i]);
+                    }
+
+                    else if (values.Length > 5)
+                    {
+
+                        string FirstName = values[0];
+                        string LastName = values[1];
+                        string Country = values[2];
+                        string City = values[3];
+                        string StreetName = values[4];
+                        int StreetNumber = int.Parse(values[5]);
+                        double Latitude = double.Parse(values[6]);
+                        double Longtitude = double.Parse(values[7]);
+
+                        userPerson = new Person
+                        {
+                            FirstName = FirstName,
+                            LastName = LastName,
+                            Country = Country,
+                            City = City,
+                            StreetName = StreetName,
+                         //   StreetNumber = StreetNumber,
+                            Latitude = Latitude,
+                            Longitude = Longtitude,
+                        };
+                        peopleList.Add(userPerson);
+                        database.Add(userPerson);
+                        database.SaveChanges();
+                    }
+
+                    else if (values.Length == 5)
+                    {
+                        int personId = int.Parse(values[0]);
+                        double latitude = double.Parse(values[1]);
+                        double longitude = double.Parse(values[2]);
+                        string contents = values[3];
+                        string message = values[4];
+
+                        Geocache userGeocache = new Geocache
+                        {
+                            Latitude = latitude,
+                            Longitude = longitude,
+                            Contents = contents,
+                            Message = message,
+                        };
+                        userGeocache.Person = userPerson;
+                        database.Add(userGeocache);
+                        database.SaveChanges();
+                    }
+                }
+            }
+            try
+            {
+                if (foundValues[0].StartsWith("Found:"))
+                {
+                    for (int i = 0; i < foundValues.Count; i++)
+                    {
+                        foundValues[i] = foundValues[i].Trim("Found: ".ToCharArray());
+                        foundValues[i] = foundValues[i].Trim(" ".ToCharArray());
+                        var indexes = foundValues[i].Split(',').ToArray();
+                        var geoCaches = database.Geocache.ToList();
+
+                        foreach (var geoS in indexes)
+                        {
+                            FoundGeocache userNewGeo = new FoundGeocache
+                            {
+                                Person = peopleList[i],
+                                Geocache = geoCaches[int.Parse(geoS) - 1]
+                            };
+                            database.Add(userNewGeo);
+                            database.SaveChanges();
+                            //UpdateMap();
+
+
+                        }
+                    }
+                }
+            }
+            catch { }
         }
     }
 }
