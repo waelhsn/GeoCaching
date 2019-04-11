@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace Geocaching
 {
@@ -472,16 +473,114 @@ namespace Geocaching
             dialog.DefaultExt = ".txt";
             dialog.Filter = "Text documents (.txt)|*.txt";
             bool? result = dialog.ShowDialog();
-
             if (result != true)
             {
                 return;
             }
 
             string path = dialog.FileName;
-            // Read the selected file here.
 
-            // TA BORT NUVARANDE DATABAS OCH LÄGG TILL NY!
+            // Read the selected file here.
+            Dictionary<Person, List<int>> personFoundGeocaches = new Dictionary<Person, List<int>>();
+            Dictionary<int, Geocache> specificGeocache = new Dictionary<int, Geocache>();
+
+            string[] lines = File.ReadAllLines(path, Encoding.GetEncoding("ISO-8859-1")).ToArray();
+            int counterPersonObject = 0;
+            int emptyLineCounter = 0;
+
+            Person person = new Person();
+            Geocache geocache = new Geocache();
+
+            database.Person.RemoveRange(database.Person);
+            database.Geocache.RemoveRange(database.Geocache);
+            database.SaveChanges();
+
+            foreach (string line in lines)
+            {
+                if (!line.Contains("Found"))
+                {
+                    string[] values = line.Split('|').Select(v => v.Trim()).ToArray();
+
+                    if (values[0] != "" && counterPersonObject == 0)
+                    {
+                        person = new Person();
+                        person.FirstName = values[0];
+                        person.LastName = values[1];
+                        person.Country = values[2];
+                        person.City = values[3];
+                        person.StreetName = values[4];
+                        person.StreetNumber = byte.Parse(values[5]);
+                        person.Latitude = Convert.ToInt32( values[6]);
+                        person.Longitude = Convert.ToInt32(values[7]);
+                       
+                        emptyLineCounter = 0;
+                        counterPersonObject++;
+                        
+                    }
+
+                    else if (values[0] == "")
+                    {
+                        counterPersonObject = 0;
+                        emptyLineCounter++;
+
+                        if (emptyLineCounter == 2)
+                        {
+                            return;
+                        }
+                    }
+
+                    else
+                    {
+                        //geocache = new Geocache();
+
+                        //int geocacheNumber = int.Parse(values[0]);
+                        //geocache.Latitude = new Geocache
+                        //{
+                        //    Latitude = double.Parse(values[1]),
+                        //    Longitude = double.Parse(values[2])
+                        //};
+                        //geocache.Contents = values[3];
+                        //geocache.Message = values[4];
+                        //geocache.Person = person;
+
+                        //database.Geocache.Add(geocache);
+                        //database.SaveChanges();
+
+                        //specificGeocache.Add(geocacheNumber, geocache);
+                    }
+                }
+
+                else
+                {
+                    string[] geocachesFound = line.Split(':', ',').Skip(1).Select(v => v.Trim()).ToArray();
+                    List<int> geocachesId = new List<int>();
+                    foreach (var item in geocachesFound)
+                    {
+                        int geocacheId = int.Parse(item);
+                        geocachesId.Add(geocacheId);
+                    }
+                    personFoundGeocaches.Add(person, geocachesId);
+                }
+            }
+
+            //foreach (var personObject in personFoundGeocaches.Keys)
+            //{
+            //    foreach (int geocacheId in personFoundGeocaches[personObject])
+            //    {
+            //        var geocacheObject = specificGeocache[geocacheId];
+            //        FoundGeocache foundGeocache = new FoundGeocache
+            //        {
+            //            PersonID = personObject.ID,
+            //            GeocacheID = geocacheObject.ID
+            //        };
+            //        db.Add(foundGeocache);
+            //        db.SaveChanges();
+            //    };
+            //}
+            //pushpins.Clear();
+            //layer.Children.Clear();
+            //activePerson = null;
+            //ReadPersonAndGeocacheFromDatabase();
         }
     }
 }
