@@ -543,7 +543,8 @@ namespace Geocaching
                             Country = Country,
                             City = City,
                             StreetName = StreetName,
-                         //   StreetNumber = StreetNumber,
+                            //Its fucking klagar Här :(
+                           // StreetNumber =Convert.ToInt32( StreetNumber),
                             Latitude = Latitude,
                             Longitude = Longtitude,
                         };
