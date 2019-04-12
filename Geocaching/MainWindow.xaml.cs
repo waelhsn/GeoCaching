@@ -469,6 +469,17 @@ namespace Geocaching
 
         private void OnLoadFromFileClick(object sender, RoutedEventArgs args)
         {
+            // database.Remove(database.Person);
+            Task RemoveDb = Task.Run(() =>
+            {
+                database.Person.RemoveRange(database.Person);
+                database.Geocache.RemoveRange(database.Geocache);
+                database.FoundGeocache.RemoveRange(database.FoundGeocache);
+                database.SaveChanges();
+
+            });
+
+
             Person userPerson = new Person();
 
             var dialog = new Microsoft.Win32.OpenFileDialog();
@@ -527,26 +538,26 @@ namespace Geocaching
                     else if (values.Length > 5)
                     {
 
-                        string FirstName = values[0];
-                        string LastName = values[1];
-                        string Country = values[2];
-                        string City = values[3];
-                        string StreetName = values[4];
-                        int StreetNumber = int.Parse(values[5]);
-                        double Latitude = double.Parse(values[6]);
-                        double Longtitude = double.Parse(values[7]);
+                        string firstName = values[0];
+                        string lastName = values[1];
+                        string country = values[2];
+                        string city = values[3];
+                        string streetName = values[4];
+                        byte streetNumber = Convert.ToByte( values[5]);
+                        double latitude = double.Parse(values[6]);
+                        double longtitude = double.Parse(values[7]);
 
                         userPerson = new Person
                         {
-                            FirstName = FirstName,
-                            LastName = LastName,
-                            Country = Country,
-                            City = City,
-                            StreetName = StreetName,
-                            //Its fucking klagar Här :(
-                           // StreetNumber =Convert.ToInt32( StreetNumber),
-                            Latitude = Latitude,
-                            Longitude = Longtitude,
+                            FirstName = firstName,
+                            LastName = lastName,
+                            Country = country,
+                            City = city,
+                            StreetName = streetName,
+                            //Its fuking klagar Här :(
+                            StreetNumber =streetNumber,
+                            Latitude = latitude,
+                            Longitude = longtitude,
                         };
                         peopleList.Add(userPerson);
                         database.Add(userPerson);
@@ -569,6 +580,7 @@ namespace Geocaching
                             Message = message,
                         };
                         userGeocache.Person = userPerson;
+                        
                         database.Add(userGeocache);
                         database.SaveChanges();
                     }
@@ -602,6 +614,7 @@ namespace Geocaching
                 }
             }
             catch { }
+            CreateMap();
         }
     }
 }
