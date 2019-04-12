@@ -469,19 +469,15 @@ namespace Geocaching
 
         private void OnLoadFromFileClick(object sender, RoutedEventArgs args)
         {
-            // database.Remove(database.Person);
             Task RemoveDb = Task.Run(() =>
             {
                 database.Person.RemoveRange(database.Person);
                 database.Geocache.RemoveRange(database.Geocache);
                 database.FoundGeocache.RemoveRange(database.FoundGeocache);
                 database.SaveChanges();
-
             });
 
-
-            Person userPerson = new Person();
-
+            Person p = new Person();
             var dialog = new Microsoft.Win32.OpenFileDialog();
             dialog.DefaultExt = ".txt";
             dialog.Filter = "Text documents (.txt)|*.txt";
@@ -490,38 +486,26 @@ namespace Geocaching
             {
                 return;
             }
-
             string path = dialog.FileName;
-
-            // Read the selected file here.
-
             List<List<String>> collection = new List<List<string>>();
-            List<string> linesWithObjects = new List<string>();
-
-            //alternative testing
+            List<string> Objects = new List<string>();
             List<Person> peopleList = new List<Person>();
             List<string> foundValues = new List<string>();
-
-            database.Person.RemoveRange(database.Person);
-            database.Geocache.RemoveRange(database.Geocache);
-            database.FoundGeocache.RemoveRange(database.FoundGeocache);
-
             string[] lines = File.ReadAllLines(path).ToArray();
-
             foreach (var line in lines)
             {
                 if (line != "")
                 {
-                    linesWithObjects.Add(line);
+                    Objects.Add(line);
                     continue;
                 }
                 else
                 {
-                    collection.Add(linesWithObjects);
-                    linesWithObjects = new List<string>();
+                    collection.Add(Objects);
+                    Objects = new List<string>();
                 }
             }
-            collection.Add(linesWithObjects);
+            collection.Add(Objects);
 
 
             foreach (List<string> personLines in collection)
@@ -543,24 +527,25 @@ namespace Geocaching
                         string country = values[2];
                         string city = values[3];
                         string streetName = values[4];
-                        byte streetNumber = Convert.ToByte( values[5]);
+                        byte   streetNumber = Convert.ToByte( values[5]);
                         double latitude = double.Parse(values[6]);
                         double longtitude = double.Parse(values[7]);
 
-                        userPerson = new Person
+                        p = new Person
                         {
                             FirstName = firstName,
                             LastName = lastName,
                             Country = country,
                             City = city,
                             StreetName = streetName,
-                            //Its fuking klagar Här :(
-                            StreetNumber =streetNumber,
+                            //Den behövde Byte
+                            StreetNumber = streetNumber,
                             Latitude = latitude,
                             Longitude = longtitude,
                         };
-                        peopleList.Add(userPerson);
-                        database.Add(userPerson);
+
+                        peopleList.Add(p);
+                        database.Add(p);
                         database.SaveChanges();
                     }
 
@@ -572,16 +557,16 @@ namespace Geocaching
                         string contents = values[3];
                         string message = values[4];
 
-                        Geocache userGeocache = new Geocache
+                        Geocache g = new Geocache
                         {
                             Latitude = latitude,
                             Longitude = longitude,
                             Contents = contents,
                             Message = message,
                         };
-                        userGeocache.Person = userPerson;
+                        g.Person = p;
                         
-                        database.Add(userGeocache);
+                        database.Add(g);
                         database.SaveChanges();
                     }
                 }
@@ -599,16 +584,13 @@ namespace Geocaching
 
                         foreach (var geoS in indexes)
                         {
-                            FoundGeocache userNewGeo = new FoundGeocache
+                            FoundGeocache fg = new FoundGeocache
                             {
                                 Person = peopleList[i],
                                 Geocache = geoCaches[int.Parse(geoS) - 1]
                             };
-                            database.Add(userNewGeo);
+                            database.Add(fg);
                             database.SaveChanges();
-                            //UpdateMap();
-
-
                         }
                     }
                 }
