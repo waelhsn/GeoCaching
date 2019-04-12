@@ -21,10 +21,9 @@ namespace Geocaching
         public DbSet<Person> Person { get; set; }
         public DbSet<Geocache> Geocache { get; set; }
         public DbSet<FoundGeocache> FoundGeocache { get; set; }
-
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlServer(@"Data Source=(local)\SQLEXPRESS;Initial Catalog=GeoNeo;Integrated Security=True");
+            options.UseSqlServer(@"Data Source=(local)\SQLEXPRESS;Initial Catalog=Geocaching;Integrated Security=True");
         }
 
         protected override void OnModelCreating(ModelBuilder model)
@@ -44,45 +43,33 @@ namespace Geocaching
     public class Person
     {
         public int ID { get; set; }
-
         [Column(TypeName = "nvarchar(50)"), Required]
         public string FirstName { get; set; }
-
         [Column(TypeName = "nvarchar(50)"), Required]
         public string LastName { get; set; }
-
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-
         [Column(TypeName = "nvarchar(50)"),Required]
         public string Country { get; set; }
-
         [Column(TypeName = "nvarchar(50)"),Required]
         public string City { get; set; }
-
         [Column(TypeName = "nvarchar(50)"),Required]
         public string StreetName { get; set; }
         public byte StreetNumber { get; set; }
-
         public ICollection<FoundGeocache> FoundGeocaches { get; set; }
     }
 
     public class Geocache
     {
         public int ID { get; set; }
-       
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-
         [Column(TypeName = "nvarchar(255)"),Required]
         public string Contents { get; set; }
-
         [Column(TypeName = "nvarchar(255)"),Required]
         public string Message { get; set; }
-
         public int? PersonId { get; set; }
         public Person Person { get; set; }
-
         public ICollection<FoundGeocache> FoundGeocaches { get; set; }
     }
 
@@ -102,18 +89,13 @@ namespace Geocaching
     public partial class MainWindow : Window
     {
         private const string applicationId = "1KlpjniiHn1oXPu7OmLd~-RJENhz40F2_RPqM7GJdWA~Av_cdSualyUi8UW8s6omXTT2_USITW0gcrUwkcWj-hQ50_MbsPK4BhJ1D0l1-JL2";
-
         private MapLayer layer;
         private GeoCoordinate latestClickLocation;
         private GeoCoordinate gothenburg = new GeoCoordinate { Latitude = 57.719021, Longitude = 11.991202 };
         private GeoCoordinate geoCoo;
-
         private Person selectedPerson = null;
-
         private AppDbContext database = new AppDbContext();
-
         Object lockThis = new Object();
-
         public MainWindow()
         {
             latestClickLocation = gothenburg;
@@ -133,10 +115,7 @@ namespace Geocaching
             {
                 layer.Children.Clear();
             }
-            catch
-            {
-
-            }
+            catch {}
             map.CredentialsProvider = new ApplicationIdCredentialsProvider(applicationId);
             map.Center = new Location { Latitude = gothenburg.Latitude, Longitude = gothenburg.Longitude };
             map.ZoomLevel = 12;
@@ -191,7 +170,11 @@ namespace Geocaching
                 geoCoo = new GeoCoordinate();
                 geoCoo.Latitude = person.Latitude;
                 geoCoo.Longitude = person.Longitude;
-                var pin = AddPin(geoCoo, person.FirstName + " " + person.LastName + "\n" + person.StreetName + " " + person.StreetNumber + "\n" + person.City ,  Colors.Blue, 1, person);
+                var pin = AddPin(geoCoo, person.FirstName +
+                    " " + person.LastName + 
+                    "\n" + person.StreetName +
+                    " " + person.StreetNumber + 
+                    "\n" + person.City ,  Colors.Blue, 1, person);
 
                 pin.MouseDown += PersonSel;
             }
@@ -211,9 +194,7 @@ namespace Geocaching
         {
             Geocache[] geocaches = null;
             var gcs = Task.Run(() =>
-            {
-                geocaches = database.Geocache.Select(a => a).ToArray();
-            });
+            { geocaches = database.Geocache.Select(a => a).ToArray(); });
 
             Pushpin pin = (Pushpin)sender;
             Person person = (Person)pin.Tag;
@@ -227,11 +208,11 @@ namespace Geocaching
             {
 
                 try { p.MouseDown -= GreenPin; }
-                catch { }
+                catch {}
                 try { p.MouseDown -= RedPin; }
-                catch { }
+                catch {}
                 try { p.MouseDown -= Handled; }
-                catch { }
+                catch {}
 
                 Geocache geocache = geocaches
                     .FirstOrDefault(g => g.Longitude == p.Location.Longitude && g.Latitude == p.Location.Latitude);
@@ -421,28 +402,37 @@ namespace Geocaching
             }
 
             List<string> list = new List<string>();
-
             string path = dialog.FileName;
 
             Task readFile = Task.Run(async() =>
             {
                 await Task.WhenAll();
-                Person[] ppl = database.Person.Select(p => p).OrderByDescending(o => o).ToArray();
+                Person[] ppl = database.Person
+                .Select(p => p)
+                .OrderByDescending(o => o)
+                .ToArray();
                 lock(lockThis)
                 {
                     foreach (Person p in ppl)
                     {
-                        list.Add( p.FirstName + " | " + p.LastName + 
-                            " | " + p.Country + " | " + p.City +
-                            " | " + p.StreetName + " | " +
-                            p.StreetNumber + " | " +p.Latitude +
+                        list.Add( p.FirstName +
+                            " | " + p.LastName + 
+                            " | " + p.Country +
+                            " | " + p.City +
+                            " | " + p.StreetName +
+                            " | " + p.StreetNumber +
+                            " | " +p.Latitude +
                             " | "+p.Longitude); 
 
                         Geocache[] geo = database.Geocache
                             .Where(g => g.PersonId == p.ID)
                             .OrderByDescending(o => o).ToArray();
 
-                        geo.ToList().ForEach(g => list.Add(g.ID +" | "+g.Latitude+ " | " +g.Longitude+ " | " +g.Contents + " | " + g.Message));
+                        geo.ToList().ForEach(g => list.Add(g.ID +
+                            " | " + g.Latitude+
+                            " | " + g.Longitude+
+                            " | " +g.Contents +
+                            " | " + g.Message));
 
                         FoundGeocache[] founds = database.FoundGeocache
                             .Where(f => f.PersonId == p.ID)
@@ -538,12 +528,10 @@ namespace Geocaching
                             Country = country,
                             City = city,
                             StreetName = streetName,
-                            //Den behövde Byte
                             StreetNumber = streetNumber,
                             Latitude = latitude,
                             Longitude = longtitude,
                         };
-
                         peopleList.Add(p);
                         database.Add(p);
                         database.SaveChanges();

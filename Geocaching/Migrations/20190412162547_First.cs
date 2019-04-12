@@ -13,13 +13,13 @@ namespace Geocaching.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    FirstName = table.Column<string>(type: "nvarchar(50)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     Latitude = table.Column<double>(nullable: false),
                     Longitude = table.Column<double>(nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(50)", nullable: true),
-                    City = table.Column<string>(type: "nvarchar(50)", nullable: true),
-                    StreetName = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    City = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    StreetName = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     StreetNumber = table.Column<byte>(nullable: false)
                 },
                 constraints: table =>
@@ -35,8 +35,8 @@ namespace Geocaching.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Latitude = table.Column<double>(nullable: false),
                     Longitude = table.Column<double>(nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(255)", nullable: true),
-                    Message = table.Column<string>(type: "nvarchar(255)", nullable: true),
+                    Contents = table.Column<string>(type: "nvarchar(255)", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(255)", nullable: false),
                     PersonId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>

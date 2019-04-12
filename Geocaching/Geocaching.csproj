@@ -166,17 +166,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\20190410094606_First.cs" />
-    <Compile Include="Migrations\20190410094606_First.designer.cs">
-      <DependentUpon>20190410094606_First.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20190410102257_First2.cs" />
-    <Compile Include="Migrations\20190410102257_First2.designer.cs">
-      <DependentUpon>20190410102257_First2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20190410102549_First3.cs" />
-    <Compile Include="Migrations\20190410102549_First3.designer.cs">
-      <DependentUpon>20190410102549_First3.cs</DependentUpon>
+    <Compile Include="Migrations\20190412162547_First.cs" />
+    <Compile Include="Migrations\20190412162547_First.designer.cs">
+      <DependentUpon>20190412162547_First.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="PersonDialog.xaml.cs">
