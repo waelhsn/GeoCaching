@@ -76,11 +76,9 @@ namespace Geocaching
     public class FoundGeocache
     {
         public int ID { get; set; }
-
         [ForeignKey("PersonId")]
         public int PersonId { get; set; }
         public Person Person { get; set; }
-
         [ForeignKey("GeocacheId")]
         public int GeocacheId { get; set; }
         public Geocache Geocache { get; set; }
@@ -208,11 +206,11 @@ namespace Geocaching
             {
 
                 try { p.MouseDown -= GreenPin; }
-                catch {}
+                catch { }
                 try { p.MouseDown -= RedPin; }
-                catch {}
+                catch { }
                 try { p.MouseDown -= Handled; }
-                catch {}
+                catch { }
 
                 Geocache geocache = geocaches
                     .FirstOrDefault(g => g.Longitude == p.Location.Longitude && g.Latitude == p.Location.Latitude);
@@ -252,19 +250,20 @@ namespace Geocaching
 
         private void GreenPin(object sender, MouseButtonEventArgs e)
         {
-            
             Pushpin pin = (Pushpin)sender;
             Geocache geocache = (Geocache)pin.Tag;
+
             try
             {
                 FoundGeocache foundGeocache = database.FoundGeocache
-               .FirstOrDefault(fg => fg.PersonId == selectedPerson.ID && fg.GeocacheId == geocache.ID);
-            database.Remove(foundGeocache);
+                    .FirstOrDefault(fg => fg.PersonId == selectedPerson.ID && fg.GeocacheId == geocache.ID);
+                database.Remove(foundGeocache);
             }
             catch { }
 
             try { database.SaveChanges(); }
             catch { }
+
             UpdatePin(pin, Colors.Red, 1);
             pin.MouseDown -= GreenPin;
             pin.MouseDown += RedPin;
@@ -281,8 +280,10 @@ namespace Geocaching
                 Geocache = geocache
             };
             database.Add(foundGeocache);
+
             try { database.SaveChanges(); }
             catch { }
+
             UpdatePin(pin, Colors.Green, 1);
             pin.MouseDown -= RedPin;
             pin.MouseDown += GreenPin;
@@ -348,7 +349,6 @@ namespace Geocaching
                 return;
             };
 
-
             Person p = new Person
             {
                 FirstName = dialog.PersonFirstName,
@@ -408,9 +408,9 @@ namespace Geocaching
             {
                 await Task.WhenAll();
                 Person[] ppl = database.Person
-                .Select(p => p)
-                .OrderByDescending(o => o)
-                .ToArray();
+                    .Select(p => p)
+                    .OrderByDescending(o => o)
+                    .ToArray();
                 lock(lockThis)
                 {
                     foreach (Person p in ppl)
@@ -421,17 +421,17 @@ namespace Geocaching
                             " | " + p.City +
                             " | " + p.StreetName +
                             " | " + p.StreetNumber +
-                            " | " +p.Latitude +
-                            " | "+p.Longitude); 
+                            " | " + p.Latitude +
+                            " | " + p.Longitude); 
 
                         Geocache[] geo = database.Geocache
                             .Where(g => g.PersonId == p.ID)
                             .OrderByDescending(o => o).ToArray();
 
                         geo.ToList().ForEach(g => list.Add(g.ID +
-                            " | " + g.Latitude+
-                            " | " + g.Longitude+
-                            " | " +g.Contents +
+                            " | " + g.Latitude +
+                            " | " + g.Longitude +
+                            " | " + g.Contents +
                             " | " + g.Message));
 
                         FoundGeocache[] founds = database.FoundGeocache
