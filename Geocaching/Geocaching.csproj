@@ -170,6 +170,10 @@
     <Compile Include="Migrations\20190412162547_First.designer.cs">
       <DependentUpon>20190412162547_First.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20200420142355_first1.cs" />
+    <Compile Include="Migrations\20200420142355_first1.designer.cs">
+      <DependentUpon>20200420142355_first1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="PersonDialog.xaml.cs">
       <DependentUpon>PersonDialog.xaml</DependentUpon>
