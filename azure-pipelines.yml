@@ -6,29 +6,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- task: NuGetCommand@2
-  displayName: 'Authenticate with Azure DevOps NuGet'
-  inputs:
-    command: custom
-    arguments: sources update -Name "wcom-intern" -Username "vsts" -Password "$(System.AccessToken)" -StorePasswordInClearText -ConfigFile ./nuget.config
-
-- task: UseDotNet@2
-  inputs:
-    packageType: 'sdk'
-    useGlobalJson: true
-
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet publish'
   inputs:
-    command: publish
-    publishWebProjects: false
-    projects: '**/*.csproj'
-    arguments: '-o $(Build.ArtifactStagingDirectory)/Output /p:Version=$(Build.BuildNumber)'
-    zipAfterPublish: true
-    modifyOutputPath: true
-
-- task: PublishPipelineArtifact@0
-  displayName: Publish Pipeline Artifact GeoCaching
-  inputs:
-    artifactName: GeoCaching
-    targetPath: $(Build.ArtifactStagingDirectory)/Output/GeoCaching.zip
+    command: 'build'
+    projects: '**/*.sln'
