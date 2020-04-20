@@ -1,3 +1,5 @@
+
+
 name: $(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
 trigger:
 - master
@@ -10,19 +12,4 @@ steps:
   inputs:
     packageType: 'sdk'
     version: '3.1.101'
-
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet publish'
-  inputs:
-    command: publish
-    publishWebProjects: false
-    projects: '**/*.csproj'
-    arguments: '-o $(Build.ArtifactStagingDirectory)/Output'
-    zipAfterPublish: true
-    modifyOutputPath: true
-
-- task: PublishPipelineArtifact@0
-  displayName: Publish Pipeline Artifact GeoCaching
-  inputs:
-    artifactName: GeoCaching
-    targetPath: $(Build.ArtifactStagingDirectory)/Output/GeoCaching.zip
+    projects: '**/*.sln'
