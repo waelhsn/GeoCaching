@@ -6,7 +6,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- task: DotNetCoreCLI@2
+- task: VSBuild@1
   inputs:
-    command: 'build'
-    projects: '**/*.sln'
+    solution: '**\*.sln'
+    vsVersion: '16.0'
