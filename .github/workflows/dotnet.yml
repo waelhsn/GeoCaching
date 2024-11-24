@@ -23,4 +23,4 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore src/*.sln
     - name: Build
-      run: dotnet build --no-restore src/*.sln
+      run: dotnet build src/*.sln
